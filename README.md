@@ -11,7 +11,7 @@
       max-width: 700px;
       margin: auto;
     }
-    h1, h2 {
+    h1 {
       text-align: center;
     }
     form {
@@ -30,15 +30,16 @@
       margin-bottom: 15px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .event-card h3 {
+    .event-card h2 {
       margin-top: 0;
     }
-    #eventSection {
-      display: none;
-    }
+    /* Add some basic styling for responsiveness */
     @media (max-width: 600px) {
       body {
         padding: 1rem;
+      }
+      h1 {
+        font-size: 1.5rem;
       }
       input, button {
         font-size: 0.9rem;
@@ -50,90 +51,50 @@
 
   <h1>Find Players for Your Sport</h1>
 
-  <div id="signInSection">
-    <h2>Sign In</h2>
-    <form id="signInForm">
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="tel" id="phone" placeholder="Phone Number" required />
-      <button type="submit">Sign In</button>
-    </form>
-  </div>
+  <form id="eventForm">
+    <input type="text" id="sport" placeholder="Sport (e.g. Soccer, Basketball)" required />
+    <input type="text" id="location" placeholder="Location" required />
+    <input type="date" id="date" required />
+    <input type="time" id="time" required />
+    <input type="text" id="contact" placeholder="Contact Info (Email or Phone)" required />
+    <button type="submit">Post Event</button>
+  </form>
 
-  <div id="eventSection">
-    <h2>Post an Event</h2>
-    <form id="eventForm">
-      <input type="text" id="sport" placeholder="Sport (e.g. Soccer, Basketball)" required />
-      <input type="text" id="location" placeholder="Location" required />
-      <label for="date"><strong>Date of the Event:</strong></label>
-      <input type="date" id="date" required />
-      <input type="time" id="time" required />
-      <button type="submit">Post Event</button>
-    </form>
-
-    <h2>Event Stream</h2>
-    <div id="eventsContainer"></div>
-  </div>
+  <div id="eventsContainer"></div>
 
   <script>
-    const signInForm = document.getElementById('signInForm');
-    const eventForm = document.getElementById('eventForm');
-    const signInSection = document.getElementById('signInSection');
-    const eventSection = document.getElementById('eventSection');
+    const form = document.getElementById('eventForm');
     const eventsContainer = document.getElementById('eventsContainer');
 
-    let signedInUser = {};
-
-    // Restrict past dates in date picker
-    const dateInput = document.getElementById('date');
-    const today = new Date().toISOString().split("T")[0];
-    dateInput.setAttribute('min', today);
-
-    signInForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const email = document.getElementById('email').value;
-      const phone = document.getElementById('phone').value;
-
-      if (email && phone) {
-        signedInUser = { email, phone };
-        signInSection.style.display = 'none';
-        eventSection.style.display = 'block';
-      }
-    });
-
-    eventForm.addEventListener('submit', function (e) {
+    form.addEventListener('submit', function (e) {
       e.preventDefault();
 
       const sport = document.getElementById('sport').value;
       const location = document.getElementById('location').value;
       const date = document.getElementById('date').value;
       const time = document.getElementById('time').value;
+      const contact = document.getElementById('contact').value;
 
-      const selectedDate = new Date(date);
-      const now = new Date();
-      now.setHours(0,0,0,0);
-
-      if (selectedDate < now) {
-        alert('Please select a date that is today or in the future.');
-        return;
-      }
-
-      if (sport && location && date && time && signedInUser.email && signedInUser.phone) {
+      if (sport && location && date && time && contact) {
         const card = document.createElement('div');
         card.className = 'event-card';
         card.innerHTML = `
-          <h3>${sport}</h3>
+          <h2>${sport}</h2>
           <p><strong>Location:</strong> ${location}</p>
           <p><strong>Date:</strong> ${date}</p>
           <p><strong>Time:</strong> ${time}</p>
-          <p><strong>Posted by:</strong> ${signedInUser.email} (${signedInUser.phone})</p>
+          <p><strong>Contact:</strong> ${contact}</p>
         `;
+
         eventsContainer.appendChild(card);
-        eventForm.reset();
+        form.reset(); // Reset the form after posting the event
       } else {
-        alert('Please fill out all fields.');
+        alert('Please fill out all fields!');
       }
     });
   </script>
 </body>
 </html>
+
+
+
