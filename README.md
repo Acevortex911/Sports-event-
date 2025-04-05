@@ -85,4 +85,55 @@
 
     // Restrict past dates in date picker
     const dateInput = document.getElementById('date');
-    const today =
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.setAttribute('min', today);
+
+    signInForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+
+      if (email && phone) {
+        signedInUser = { email, phone };
+        signInSection.style.display = 'none';
+        eventSection.style.display = 'block';
+      }
+    });
+
+    eventForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const sport = document.getElementById('sport').value;
+      const location = document.getElementById('location').value;
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+
+      const selectedDate = new Date(date);
+      const now = new Date();
+      now.setHours(0,0,0,0);
+
+      if (selectedDate < now) {
+        alert('Please select a date that is today or in the future.');
+        return;
+      }
+
+      if (sport && location && date && time && signedInUser.email && signedInUser.phone) {
+        const card = document.createElement('div');
+        card.className = 'event-card';
+        card.innerHTML = `
+          <h3>${sport}</h3>
+          <p><strong>Location:</strong> ${location}</p>
+          <p><strong>Date:</strong> ${date}</p>
+          <p><strong>Time:</strong> ${time}</p>
+          <p><strong>Posted by:</strong> ${signedInUser.email} (${signedInUser.phone})</p>
+        `;
+        eventsContainer.appendChild(card);
+        eventForm.reset();
+      } else {
+        alert('Please fill out all fields.');
+      }
+    });
+  </script>
+</body>
+</html>
